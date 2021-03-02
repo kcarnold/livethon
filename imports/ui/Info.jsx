@@ -50,6 +50,10 @@ const onChange = mod => async (newVal, event) => {
   }
 }
 
+const cloneModule = mod => {
+  const {filename, contents} = mod;
+  ModulesCollection.insert({filename, contents, createdAt: new Date()});
+}
 
 export const Info = () => {
   const modules = useTracker(() => {
@@ -62,9 +66,10 @@ export const Info = () => {
 
   return (
     <div>
-      <div>{modules.map(
+      <div class="allModules">{modules.map(
         module => <div key={module._id}>
           <h3>{module.filename}</h3>
+          <button onClick={e => cloneModule(module)}>Clone</button>
           <AceEditor
     mode="python"
     theme="github"
@@ -74,11 +79,13 @@ export const Info = () => {
     editorProps={{ $blockScrolling: true }}
     value={module.contents}
   />
+      <div class="output">{
+        runs.filter(x => x.module === module._id).slice(0, 1).map(
+          run => <div key={run._id} style={{whiteSpace: "pre"}}>{run.output}</div>
+        )}
         </div>
-      )}</div>
-      <div>{runs.slice(0, 1).map(
-        run => <div key={run._id} style={{whiteSpace: "pre"}}>{run.output}</div>
-      )}</div>
       </div>
+      )}</div>
+    </div>
   );
 };

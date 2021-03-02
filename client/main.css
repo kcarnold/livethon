@@ -2,3 +2,9 @@ body {
   padding: 10px;
   font-family: sans-serif;
 }
+
+.allModules {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
