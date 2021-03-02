@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
+    "ace-builds": "^1.4.12",
     "meteor-node-stubs": "^1.0.1",
     "react": "^16.13.1",
+    "react-ace": "^9.3.0",
     "react-dom": "^16.13.1"
   },
   "meteor": {
