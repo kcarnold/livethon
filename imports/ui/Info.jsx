@@ -66,20 +66,25 @@ export const Info = () => {
 
   return (
     <div>
-      <div class="allModules">{modules.map(
+      <div className="allModules">{modules.map(
         module => <div key={module._id}>
           <h3>{module.filename}</h3>
           <button onClick={e => cloneModule(module)}>Clone</button>
           <AceEditor
-    mode="python"
-    theme="github"
-    onChange={onChange(module)}
-    debounceChangePeriod={1000}
-    name={module._id}
-    editorProps={{ $blockScrolling: true }}
-    value={module.contents}
-  />
-      <div class="output">{
+            mode="python"
+            theme="github"
+            setOptions={{
+              useSoftTabs: true
+            }}
+            height="200px"
+            width="300px"
+            onChange={onChange(module)}
+            debounceChangePeriod={1000}
+            name={module._id}
+            editorProps={{ $blockScrolling: true }}
+            value={module.contents}
+          />
+      <div className="output">{
         runs.filter(x => x.module === module._id).slice(0, 1).map(
           run => <div key={run._id} style={{whiteSpace: "pre"}}>{run.output}</div>
         )}
