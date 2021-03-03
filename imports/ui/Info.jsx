@@ -6,7 +6,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-github";
 
-const worker = new Worker(Meteor.absoluteUrl('py-runner.js'))
+const worker = new Worker('/py-runner.js');
 
 function runPython(script, context, onSuccess, onError){
     worker.onerror = onError;
