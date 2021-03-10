@@ -38,15 +38,16 @@ const onChange = mod => async (newVal, event) => {
   })
   try {
     const results = await asyncRunPython(script, {});
+    let output = results.error ?results.error : results.stdout;
     console.log(results);
     RunsCollection.insert({
       module: mod._id,
       input: "",
-      output: results.stdout,
+      output,
       createdAt: new Date()
     })
   } catch(error) {
-    console.warn(error);
+    console.warn(error)
   }
 }
 
