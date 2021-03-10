@@ -60,13 +60,19 @@ const removeModule = mod => {
   ModulesCollection.remove({_id: mod._id});
 }
 
+export const ResultViewer = ({module_id}) => {
+  const run = useTracker(() => {
+    return RunsCollection.findOne({module: module_id}, {sort: {createdAt: -1}});
+  });
+
+  return <div className="output">
+    {run && <div style={{whiteSpace: "pre"}}>{run.output}</div>}
+  </div>;
+}
+
 export const Info = () => {
   const modules = useTracker(() => {
     return ModulesCollection.find().fetch();
-  });
-
-  const runs = useTracker(() => {
-    return RunsCollection.find({}, {sort: {createdAt: -1}}).fetch();
   });
 
   return (
@@ -90,11 +96,7 @@ export const Info = () => {
             editorProps={{ $blockScrolling: true }}
             value={module.contents}
           />
-      <div className="output">{
-        runs.filter(x => x.module === module._id).slice(0, 1).map(
-          run => <div key={run._id} style={{whiteSpace: "pre"}}>{run.output}</div>
-        )}
-        </div>
+        <ResultViewer module_id={module._id} />
       </div>
       )}</div>
     </div>
