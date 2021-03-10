@@ -56,6 +56,10 @@ const cloneModule = mod => {
   ModulesCollection.insert({filename, contents, createdAt: new Date()});
 }
 
+const removeModule = mod => {
+  ModulesCollection.remove({_id: mod._id});
+}
+
 export const Info = () => {
   const modules = useTracker(() => {
     return ModulesCollection.find().fetch();
@@ -68,9 +72,10 @@ export const Info = () => {
   return (
     <div>
       <div className="allModules">{modules.map(
-        module => <div key={module._id}>
+        (module, i) => <div key={module._id}>
           <h3>{module.filename}</h3>
           <button onClick={e => cloneModule(module)}>Clone</button>
+          {modules.length > 1 ? <button onClick={e => removeModule(module)}>Remove</button> : null}
           <AceEditor
             mode="python"
             theme="github"
