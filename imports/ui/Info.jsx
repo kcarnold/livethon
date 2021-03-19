@@ -66,7 +66,7 @@ export const ResultViewer = ({module_id}) => {
   });
 
   return <div className="output">
-    {run && <div style={{whiteSpace: "pre"}}>{run.output}</div>}
+    {run && <div style={{whiteSpace: "pre", fontFamily: "monospace"}}>{run.output}</div>}
   </div>;
 }
 
@@ -89,7 +89,7 @@ export const Info = () => {
               useSoftTabs: true
             }}
             height="200px"
-            width="300px"
+            width="350px"
             onChange={onChange(module)}
             debounceChangePeriod={1000}
             name={module._id}
