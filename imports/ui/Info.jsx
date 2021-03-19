@@ -66,7 +66,7 @@ export const ResultViewer = ({module_id}) => {
   });
 
   return <div className="output">
-    {run && <div style={{whiteSpace: "pre", fontFamily: "monospace"}}>{run.output}</div>}
+    {run && <div style={{whiteSpace: "pre-wrap", fontFamily: "monospace"}}>{run.output}</div>}
   </div>;
 }
 
