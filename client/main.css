@@ -3,8 +3,38 @@ body {
   font-family: sans-serif;
 }
 
+b {
+  font-weight: normal;
+}
+
+.app{
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+
+.feedback-container {
+  padding: 20px;
+  border: 1px solid black;
+
+}
+
+.feedback {
+  margin: 5px;
+  padding: 5px;
+  background-color: #ddd;
+}
+
 .allModules {
   display: flex;
   flex-wrap: nowrap;
   flex-direction: row;
+}
+
+.output {
+  padding: 8px;
+  margin: 10px 10px 10px 0;
+  background-color: #ddd;
+  white-space: "pre-wrap";
+  font-family: monospace;
 }

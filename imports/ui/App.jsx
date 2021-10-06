@@ -1,8 +1,14 @@
-import React from 'react';
-import { Info } from './Info.jsx';
+import React, { useState } from "react";
+import { Info, createModule } from "./Info.jsx";
+import { Feedback } from "./Feedback.jsx";
 
-export const App = () => (
-  <div>
-    <Info/>
-  </div>
-);
+export const App = () => {
+  const [moduleID, setModuleID] = useState(createModule());
+
+  return (
+    <div className="app">
+      <Info moduleID={moduleID} />
+      <Feedback moduleID={moduleID} />
+    </div>
+  );
+};
