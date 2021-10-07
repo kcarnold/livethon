@@ -2,9 +2,9 @@ import React from "react";
 import { FeedbackCollection } from "../api/modules";
 import { useTracker } from "meteor/react-meteor-data";
 
-export const Feedback = ({ moduleID }) => {
+export const Feedback = ({ module }) => {
   const feedback = useTracker(() => {
-    return FeedbackCollection.find({ module: moduleID }).fetch();
+    return FeedbackCollection.find({ module: module._id }).fetch();
   });
 
   return (
