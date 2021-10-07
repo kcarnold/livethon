@@ -1,16 +1,25 @@
 import { Meteor } from 'meteor/meteor';
+import { Accounts } from 'meteor/accounts-base';
 import { ModulesCollection } from '/imports/api/modules';
 
-function insertModule({ filename, contents }) {
-  ModulesCollection.insert({filename, contents, createdAt: new Date()});
-}
+// Placeholder for actual login credentials
+// All passwords are "password"
+export const INSTRUCTOR = "instructor";
+const STUDENTS = [
+  "Jacob",
+  "Andrew",
+  "Josh",
+]
 
 Meteor.startup(() => {
-  // If the Links collection is empty, add some data.
-  if (ModulesCollection.find().count() === 0) {
-    insertModule({
-      filename: "test.py",
-      contents: "print('Hello, world!')"
-    });
-  }
+
+  [...STUDENTS, INSTRUCTOR].forEach((name) => {
+    if (!Accounts.findUserByUsername(name)) {
+      Accounts.createUser({
+        username: name,
+        password: "password",
+      });
+    }
+  });
+
 });
