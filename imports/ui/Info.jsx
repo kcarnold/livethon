@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { ModulesCollection, RunsCollection } from '../api/modules';
 
@@ -28,7 +28,6 @@ export function asyncRunPython(script, context) {
     });
 }
 
-
 const onChange = (mod, setOutput) => async (newVal, event) => {
   const script = newVal;
   ModulesCollection.update(mod._id, {
@@ -39,7 +38,6 @@ const onChange = (mod, setOutput) => async (newVal, event) => {
   try {
     const results = await asyncRunPython(script, {});
     let output = results.error ?results.error : results.stdout;
-    console.log(results);
     setOutput(output)
 
     RunsCollection.insert({
@@ -53,8 +51,8 @@ const onChange = (mod, setOutput) => async (newVal, event) => {
   }
 }
 
-export const createModule = () => {
-  return ModulesCollection.insert({body: "print(\"Hello, world!\")", createdAt: new Date()});
+export const createModule = (userID) => {
+  return ModulesCollection.insert({contents: "print(\"Hello, world!\")", createdAt: new Date(), user: userID});
 }
 
 export const ResultViewer = ({module_id}) => {
@@ -68,12 +66,18 @@ export const ResultViewer = ({module_id}) => {
 }
 
 export const Info = ({moduleID}) => {
+  const user = useTracker(() => Meteor.user());
 
   const modules = useTracker(() => {
-    return ModulesCollection.find({_id: moduleID}).fetch();
+    return ModulesCollection.find({user: user._id}).fetch();
   });
 
-  console.log(moduleID)
+  useEffect(() => {
+    if (modules.length < 1) {
+      createModule(user._id);
+    }
+  }, [modules]);
+
   const [output, setOutput] = useState(null)
 
   return (
@@ -92,7 +96,7 @@ export const Info = ({moduleID}) => {
             debounceChangePeriod={1000}
             name={module._id}
             editorProps={{ $blockScrolling: true }}
-            value={module.body}
+            value={module.contents}
           />
         {output ? <ResultViewer module_id={module._id} /> : null}
       </div>
