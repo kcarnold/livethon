@@ -70,11 +70,11 @@ export const ResultViewer = ({ module_id }) => {
 
 export const Module = ({ module, title }) => {
 
-  const [output, setOutput] = useState(null)
+  const [output, setOutput] = useState(null);
 
   useEffect(() => {
       compile(module.contents, setOutput);
-  });
+  }, []);
 
   useEffect(() => {
     RunsCollection.insert({
@@ -103,7 +103,7 @@ export const Module = ({ module, title }) => {
         editorProps={{ $blockScrolling: true }}
         value={module.contents}
         />
-        {output ? <ResultViewer module_id={module._id} /> : null}
+        {output ? <div className="output"><div>{output}</div></div> : <p>Missing output</p>}
     </div>
   );
 };

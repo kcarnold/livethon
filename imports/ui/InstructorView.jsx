@@ -14,16 +14,21 @@ export const InstructorView = ({ user }) => {
       const student = Meteor.users.find({ _id: id }).fetch()[0];
       return student.username;
   }
-  
+
+  const submitFeedback = () => {
+      alert("submitted")
+  }
+
   return (
     <div className="InstructorView">
         <Fragment>
             {getModules(user).map((module) => 
                 <Fragment key={module._id}>
                     <Module module={module} title={getStudentName(module.user)}/>
-                    <div>
-                        Feedback InputBox for {module.user}
-                    </div>
+                    <form onSubmit={submitFeedback}>
+                        <input></input>
+                        <button>Submit</button>
+                    </form>
                 </Fragment>
             )}
         </Fragment>
