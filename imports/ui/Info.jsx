@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { ModulesCollection, RunsCollection } from '../api/modules';
 
@@ -29,7 +29,7 @@ export function asyncRunPython(script, context) {
 }
 
 
-const onChange = mod => async (newVal, event) => {
+const onChange = (mod, setOutput) => async (newVal, event) => {
   const script = newVal;
   ModulesCollection.update(mod._id, {
     $set: {
@@ -40,6 +40,8 @@ const onChange = mod => async (newVal, event) => {
     const results = await asyncRunPython(script, {});
     let output = results.error ?results.error : results.stdout;
     console.log(results);
+    setOutput(output)
+
     RunsCollection.insert({
       module: mod._id,
       input: "",
@@ -51,13 +53,8 @@ const onChange = mod => async (newVal, event) => {
   }
 }
 
-const cloneModule = mod => {
-  const {filename, contents} = mod;
-  ModulesCollection.insert({filename, contents, createdAt: new Date()});
-}
-
-const removeModule = mod => {
-  ModulesCollection.remove({_id: mod._id});
+export const createModule = () => {
+  return ModulesCollection.insert({body: "print(\"Hello, world!\")", createdAt: new Date()});
 }
 
 export const ResultViewer = ({module_id}) => {
@@ -66,22 +63,23 @@ export const ResultViewer = ({module_id}) => {
   });
 
   return <div className="output">
-    {run && <div style={{whiteSpace: "pre-wrap", fontFamily: "monospace"}}>{run.output}</div>}
+    {run && <div >{run.output}</div>}
   </div>;
 }
 
-export const Info = () => {
+export const Info = ({moduleID}) => {
+
   const modules = useTracker(() => {
-    return ModulesCollection.find().fetch();
+    return ModulesCollection.find({_id: moduleID}).fetch();
   });
+
+  console.log(moduleID)
+  const [output, setOutput] = useState(null)
 
   return (
     <div>
       <div className="allModules">{modules.map(
         (module, i) => <div key={module._id}>
-          <h3>{module.filename}</h3>
-          <button onClick={e => cloneModule(module)}>Clone</button>
-          {modules.length > 1 ? <button onClick={e => removeModule(module)}>Remove</button> : null}
           <AceEditor
             mode="python"
             theme="github"
@@ -90,13 +88,13 @@ export const Info = () => {
             }}
             height="200px"
             width="350px"
-            onChange={onChange(module)}
+            onChange={onChange(module, setOutput)}
             debounceChangePeriod={1000}
             name={module._id}
             editorProps={{ $blockScrolling: true }}
-            value={module.contents}
+            value={module.body}
           />
-        <ResultViewer module_id={module._id} />
+        {output ? <ResultViewer module_id={module._id} /> : null}
       </div>
       )}</div>
     </div>
